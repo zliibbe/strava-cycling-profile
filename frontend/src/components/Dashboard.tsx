@@ -9,6 +9,7 @@ import { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { fetchAthleteProfile, parseOAuthParams, formatDistance, formatElevation, formatDuration } from '../services/api';
 import type { ProfileResponse } from '../types';
+import LoadingOverlay from './LoadingOverlay';
 import styles from './Dashboard.module.css';
 
 const Dashboard = () => {
@@ -16,6 +17,7 @@ const Dashboard = () => {
   const [profileData, setProfileData] = useState<ProfileResponse | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [selectedPeriod, setSelectedPeriod] = useState('30');
 
   useEffect(() => {
     const loadProfile = async () => {
@@ -26,8 +28,8 @@ const Dashboard = () => {
         // Parse OAuth parameters from URL
         const { accessToken } = parseOAuthParams(searchParams);
 
-        // Fetch profile data from backend
-        const data = await fetchAthleteProfile(accessToken);
+        // Fetch profile data from backend with selected period
+        const data = await fetchAthleteProfile(accessToken, selectedPeriod);
         setProfileData(data);
       } catch (err) {
         console.error('Failed to load profile:', err);
@@ -38,16 +40,16 @@ const Dashboard = () => {
     };
 
     loadProfile();
-  }, [searchParams]);
+  }, [searchParams, selectedPeriod]);
 
-  if (loading) {
-    return (
-      <div className={styles.loading}>
-        <div className={styles.spinner}></div>
-        Loading your cycling profile...
-      </div>
-    );
-  }
+  const handlePeriodChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    setSelectedPeriod(event.target.value);
+  };
+
+  // Show loading overlay when loading
+  const loadingMessage = selectedPeriod === '7' ? 'Loading last week stats...' :
+                         selectedPeriod === '30' ? 'Loading last 30 days stats...' :
+                         'Loading last 60 days stats...';
 
   if (error) {
     return (
@@ -58,7 +60,7 @@ const Dashboard = () => {
     );
   }
 
-  if (!profileData) {
+  if (!profileData && !loading) {
     return (
       <div className={styles.error}>
         <h2>No data available</h2>
@@ -67,10 +69,17 @@ const Dashboard = () => {
     );
   }
 
-  const { athlete, stats, period } = profileData;
+  const { athlete, stats, period } = profileData || {};
+
+  // Don't render the main content until we have data
+  if (loading || !profileData || !athlete || !stats) {
+    return <LoadingOverlay isVisible={true} message={loadingMessage} />;
+  }
 
   return (
-    <div className={styles.container}>
+    <>
+      <LoadingOverlay isVisible={loading} message={loadingMessage} />
+      <div className={styles.container}>
       <header className={styles.header}>
         <div className={styles.profileSection}>
           <img
@@ -88,7 +97,21 @@ const Dashboard = () => {
             </p>
           </div>
         </div>
-        <div className={styles.period}>{period}</div>
+        <div className={styles.periodSection}>
+          <label htmlFor="period-select" className={styles.periodLabel}>
+            Time Period:
+          </label>
+          <select
+            id="period-select"
+            value={selectedPeriod}
+            onChange={handlePeriodChange}
+            className={styles.periodSelect}
+          >
+            <option value="7">Last week</option>
+            <option value="30">Last 30 days</option>
+            <option value="60">Last 60 days</option>
+          </select>
+        </div>
       </header>
 
       <div className={styles.statsGrid}>
@@ -133,6 +156,7 @@ const Dashboard = () => {
         </div>
       </div>
     </div>
+    </>
   );
 };
 
