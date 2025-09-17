@@ -71,23 +71,24 @@ export const parseOAuthParams = (searchParams: URLSearchParams) => {
 };
 
 /**
- * Format distance for display (convert meters to readable format for Americans ;))
+ * Format distance for display (convert meters to miles for Americans ;))
  */
 export const formatDistance = (meters: number): string => {
-  const kilometers = meters / 1000;
+  const miles = meters * 0.000621371; // Convert meters to miles
 
-  if (kilometers >= 1000) {
-    return `${(kilometers / 1000).toFixed(1)}k km`;
+  if (miles >= 1000) {
+    return `${(miles / 1000).toFixed(1)}k mi`;
   }
 
-  return `${kilometers.toFixed(1)} km`;
+  return `${miles.toFixed(1)} mi`;
 };
 
 /**
- * Format elevation for display (convert meters to readable formatfor Americans ;))
+ * Format elevation for display (convert meters to feet for Americans)
  */
 export const formatElevation = (meters: number): string => {
-  return `${Math.round(meters).toLocaleString()} m`;
+  const feet = meters * 3.28084; // Convert meters to feet
+  return `${Math.round(feet).toLocaleString()} ft`;
 };
 
 /**
