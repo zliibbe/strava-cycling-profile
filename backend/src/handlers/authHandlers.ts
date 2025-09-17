@@ -5,7 +5,7 @@
 
 import express from 'express';
 import { exchangeCodeForToken, fetchAthlete, fetchActivities } from '../services/stravaApi.js';
-import { getLast30DaysStats } from '../services/statsAggregator.js';
+import { getLastWeekStats, getLast30DaysStats, getLast60DaysStats } from '../services/statsAggregator.js';
 
 type Request = express.Request;
 type Response = express.Response;
@@ -89,6 +89,10 @@ export const getAthleteProfile = async (req: Request, res: Response): Promise<vo
     return;
   }
 
+  // Get period from query parameter, default to 30 days
+  const period = req.query.period as string || '30';
+  console.log(`📊 Requested period: ${period} days`);
+
   try {
     // Delegate to service functions - following Commandment #5
     const [athlete, activities] = await Promise.all([
@@ -96,14 +100,31 @@ export const getAthleteProfile = async (req: Request, res: Response): Promise<vo
       fetchActivities(accessToken, undefined, undefined, 100) // Get more activities for better stats
     ]);
 
-    // Delegate stats calculation to service
-    const stats = getLast30DaysStats(activities);
+    // Delegate stats calculation to appropriate service function
+    let stats;
+    let periodLabel;
+
+    switch (period) {
+      case '7':
+        stats = getLastWeekStats(activities);
+        periodLabel = 'Last week';
+        break;
+      case '60':
+        stats = getLast60DaysStats(activities);
+        periodLabel = 'Last 60 days';
+        break;
+      case '30':
+      default:
+        stats = getLast30DaysStats(activities);
+        periodLabel = 'Last 30 days';
+        break;
+    }
 
     console.log('✅ Profile data assembled');
     res.json({
       athlete,
       stats,
-      period: 'Last 30 days'
+      period: periodLabel
     });
 
   } catch (error) {
