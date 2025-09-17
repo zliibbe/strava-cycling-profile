@@ -205,4 +205,4 @@ Remember to update CORS and redirect URIs accordingly.
 
 ## License
 
-This project is for an interview and should not be copied.
+This project is for an interview and should not be copied.# Clean commit history
