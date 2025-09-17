@@ -26,7 +26,6 @@ export const initiateAuth = (req: Request, res: Response): void => {
     return;
   }
 
-  // Following Commandment #6: Prefer logs to comments
   const authUrl = new URL('https://www.strava.com/oauth/authorize');
   authUrl.searchParams.set('client_id', clientId);
   authUrl.searchParams.set('response_type', 'code');
@@ -57,7 +56,6 @@ export const handleCallback = async (req: Request, res: Response): Promise<void>
     const clientId = process.env.STRAVA_CLIENT_ID!;
     const clientSecret = process.env.STRAVA_CLIENT_SECRET!;
 
-    // Delegate to service function - following Commandment #5
     const tokenData = await exchangeCodeForToken(code as string, clientId, clientSecret);
 
     // In a real app, you'd store the token securely
