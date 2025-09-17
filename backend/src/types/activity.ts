@@ -1,8 +1,5 @@
 /**
  * Domain type for Activity entity based on Strava API v3
- * Following Commandment #7: Avoid Primitive Obsessions
- *
- * API Reference: https://developers.strava.com/docs/reference/#api-Activities-getLoggedInAthleteActivities
  * Endpoint: GET /athlete/activities
  */
 export interface Activity {

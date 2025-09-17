@@ -1,8 +1,5 @@
 /**
  * Domain type for Athlete entity based on Strava API v3
- * Following Commandment #7: Avoid Primitive Obsessions
- *
- * API Reference: https://developers.strava.com/docs/reference/#api-Athletes-getLoggedInAthlete
  * Endpoint: GET /athlete
  */
 export interface Athlete {
