@@ -1,6 +1,5 @@
 /**
  * Dashboard component for displaying cycling stats
- * Following Commandment #4: Keep logic out of views
  *
  * Component only handles presentation - data fetching is in parent
  */
