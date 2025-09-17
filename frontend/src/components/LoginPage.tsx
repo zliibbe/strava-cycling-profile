@@ -1,10 +1,3 @@
-/**
- * Login page component for Strava OAuth
- * Following Commandment #4: Keep logic out of views
- *
- * This component only handles presentation - business logic is in services
- */
-
 import { initiateStravaAuth } from '../services/api';
 import styles from './LoginPage.module.css';
 
@@ -37,19 +30,19 @@ const LoginPage = () => {
           <ul className={styles.featureList}>
             <li className={styles.featureItem}>
               <span className={styles.checkIcon}>✓</span>
-              View last 30 days cycling stats
+              View multiple time periods (week, 30 days, 60 days)
             </li>
             <li className={styles.featureItem}>
               <span className={styles.checkIcon}>✓</span>
-              Total distance and elevation
+              Total distance and elevation gain
             </li>
             <li className={styles.featureItem}>
               <span className={styles.checkIcon}>✓</span>
-              Ride count and moving time
+              Ride count and moving time stats
             </li>
             <li className={styles.featureItem}>
               <span className={styles.checkIcon}>✓</span>
-              Clean, professional dashboard
+              Interactive dashboard with dynamic filtering
             </li>
           </ul>
         </div>

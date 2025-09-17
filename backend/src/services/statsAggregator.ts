@@ -43,7 +43,6 @@ export const filterActivitiesByDateRange = (
 /**
  * Aggregate cycling statistics from activities
  * Single responsibility: just calculate totals
- * Following Commandment #7: Return proper object instead of primitives
  */
 export const aggregateCyclingStats = (activities: Activity[]): AthleteStats => {
   console.log(`Aggregating stats from ${activities.length} activities`);
