@@ -1,0 +1,88 @@
+/**
+ * Statistics aggregation service functions
+ */
+
+import type { Activity, AthleteStats } from '../types/index.js';
+
+/**
+ * Filter activities to cycling activities only
+ */
+export const filterCyclingActivities = (activities: Activity[]): Activity[] => {
+  console.log(`Filtering ${activities.length} activities for cycling activities`);
+
+  const cyclingActivities = activities.filter(activity =>
+    activity.type === 'Ride' ||
+    activity.sport_type.includes('Bike') ||
+    activity.sport_type.includes('Ride')
+  );
+
+  console.log(`Found ${cyclingActivities.length} cycling activities`);
+  return cyclingActivities;
+};
+
+/**
+ * Filter activities within a date range
+ * Single responsibility: just date filtering
+ */
+export const filterActivitiesByDateRange = (
+  activities: Activity[],
+  startDate: Date,
+  endDate: Date
+): Activity[] => {
+  console.log(`Filtering activities from ${startDate.toISOString()} to ${endDate.toISOString()}`);
+
+  const filtered = activities.filter(activity => {
+    const activityDate = new Date(activity.start_date);
+    return activityDate >= startDate && activityDate <= endDate;
+  });
+
+  console.log(`Found ${filtered.length} activities in date range`);
+  return filtered;
+};
+
+/**
+ * Aggregate cycling statistics from activities
+ * Single responsibility: just calculate totals
+ * Following Commandment #7: Return proper object instead of primitives
+ */
+export const aggregateCyclingStats = (activities: Activity[]): AthleteStats => {
+  console.log(`Aggregating stats from ${activities.length} activities`);
+
+  const stats = activities.reduce((totals, activity) => ({
+    totalDistance: totals.totalDistance + (activity.distance || 0),
+    totalRides: totals.totalRides + 1,
+    totalElevationGain: totals.totalElevationGain + (activity.total_elevation_gain || 0),
+    totalMovingTime: totals.totalMovingTime + (activity.moving_time || 0)
+  }), {
+    totalDistance: 0,
+    totalRides: 0,
+    totalElevationGain: 0,
+    totalMovingTime: 0
+  } as AthleteStats);
+
+  console.log('Stats aggregated:', {
+    rides: stats.totalRides,
+    distance: `${(stats.totalDistance / 1000).toFixed(1)}km`,
+    elevation: `${stats.totalElevationGain}m`
+  });
+
+  return stats;
+};
+
+/**
+ * Get stats for last 30 days
+ * Following Commandment #8: YAGNI - just what we need for MVP
+ */
+export const getLast30DaysStats = (activities: Activity[]): AthleteStats => {
+  console.log('Getting last 30 days cycling stats');
+
+  const thirtyDaysAgo = new Date();
+  thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+
+  const today = new Date();
+
+  const cyclingActivities = filterCyclingActivities(activities);
+  const recentActivities = filterActivitiesByDateRange(cyclingActivities, thirtyDaysAgo, today);
+
+  return aggregateCyclingStats(recentActivities);
+};
