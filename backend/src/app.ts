@@ -1,7 +1,5 @@
 /**
  * Express application setup
- * Following Commandment #1: Keep it short - minimal app configuration
- * Following Commandment #5: Keep logic out of controllers - delegate to handlers
  */
 
 import express from 'express';
@@ -15,7 +13,6 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 3001;
 
-// Following Commandment #6: Prefer logs to comments
 console.log('🚀 Starting Strava Cycling Profile Backend');
 
 // Middleware

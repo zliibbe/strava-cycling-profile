@@ -84,7 +84,7 @@ export const formatDistance = (meters: number): string => {
 };
 
 /**
- * Format elevation for display (convert meters to feet for Americans)
+ * Format elevation for display (convert meters to feet for Americans ;))
  */
 export const formatElevation = (meters: number): string => {
   const feet = meters * 3.28084; // Convert meters to feet
