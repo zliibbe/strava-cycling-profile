@@ -70,19 +70,39 @@ export const aggregateCyclingStats = (activities: Activity[]): AthleteStats => {
 };
 
 /**
- * Get stats for last 30 days
- * Following Commandment #8: YAGNI - just what we need for MVP
+ * Get stats for a specific time period
  */
-export const getLast30DaysStats = (activities: Activity[]): AthleteStats => {
-  console.log('Getting last 30 days cycling stats');
+export const getStatsForPeriod = (activities: Activity[], days: number): AthleteStats => {
+  console.log(`Getting last ${days} days cycling stats`);
 
-  const thirtyDaysAgo = new Date();
-  thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+  const startDate = new Date();
+  startDate.setDate(startDate.getDate() - days);
 
   const today = new Date();
 
   const cyclingActivities = filterCyclingActivities(activities);
-  const recentActivities = filterActivitiesByDateRange(cyclingActivities, thirtyDaysAgo, today);
+  const recentActivities = filterActivitiesByDateRange(cyclingActivities, startDate, today);
 
   return aggregateCyclingStats(recentActivities);
+};
+
+/**
+ * Get stats for last 7 days
+ */
+export const getLastWeekStats = (activities: Activity[]): AthleteStats => {
+  return getStatsForPeriod(activities, 7);
+};
+
+/**
+ * Get stats for last 30 days
+ */
+export const getLast30DaysStats = (activities: Activity[]): AthleteStats => {
+  return getStatsForPeriod(activities, 30);
+};
+
+/**
+ * Get stats for last 60 days
+ */
+export const getLast60DaysStats = (activities: Activity[]): AthleteStats => {
+  return getStatsForPeriod(activities, 60);
 };
