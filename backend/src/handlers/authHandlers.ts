@@ -1,6 +1,5 @@
 /**
  * Lean request handlers for authentication
- * Following Commandment #5: Keep logic out of controllers
  * Handlers only route requests and delegate to services
  */
 
@@ -13,7 +12,7 @@ type Response = express.Response;
 
 /**
  * Generate Strava OAuth authorization URL
- * Lean handler: just build URL and redirect, no business logic
+ * Lean handler: just build URL and redirect
  */
 export const initiateAuth = (req: Request, res: Response): void => {
   console.log('🔄 Initiating Strava OAuth flow');
