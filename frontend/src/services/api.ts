@@ -19,10 +19,15 @@ export const initiateStravaAuth = (): void => {
  * Fetch athlete profile and stats from backend
  * Single responsibility: get profile data with access token
  */
-export const fetchAthleteProfile = async (accessToken: string): Promise<ProfileResponse> => {
+export const fetchAthleteProfile = async (accessToken: string, period?: string): Promise<ProfileResponse> => {
   console.log('🔄 Fetching athlete profile from backend');
 
-  const response = await fetch(`${API_BASE_URL}/api/profile`, {
+  const url = new URL(`${API_BASE_URL}/api/profile`);
+  if (period) {
+    url.searchParams.set('period', period);
+  }
+
+  const response = await fetch(url.toString(), {
     headers: {
       'Authorization': `Bearer ${accessToken}`,
       'Content-Type': 'application/json'
