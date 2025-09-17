@@ -1,0 +1,127 @@
+/**
+ * Login page styles using CSS modules
+ * Clean, professional design for OAuth flow
+ */
+
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 2rem;
+  background: linear-gradient(135deg, #fc4c02 0%, #ff6f00 100%);
+  color: white;
+}
+
+.card {
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 12px;
+  padding: 3rem;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  max-width: 400px;
+  width: 100%;
+  color: #333;
+}
+
+.title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  color: #fc4c02;
+}
+
+.subtitle {
+  font-size: 1.1rem;
+  color: #666;
+  margin-bottom: 2rem;
+  line-height: 1.5;
+}
+
+.connectButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  background: #fc4c02;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 1rem 2rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-decoration: none;
+  box-shadow: 0 4px 12px rgba(252, 76, 2, 0.3);
+}
+
+.connectButton:hover {
+  background: #e63900;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(252, 76, 2, 0.4);
+}
+
+.connectButton:active {
+  transform: translateY(0);
+}
+
+.stravaIcon {
+  width: 24px;
+  height: 24px;
+  filter: brightness(0) invert(1);
+}
+
+.features {
+  margin-top: 2rem;
+  padding-top: 2rem;
+  border-top: 1px solid #eee;
+}
+
+.featureList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  text-align: left;
+}
+
+.featureItem {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+  color: #666;
+  font-size: 0.95rem;
+}
+
+.checkIcon {
+  color: #22c55e;
+  font-weight: bold;
+}
+
+.footer {
+  margin-top: 2rem;
+  font-size: 0.85rem;
+  color: #999;
+  line-height: 1.4;
+}
+
+/* Responsive design */
+@media (max-width: 480px) {
+  .container {
+    padding: 1rem;
+  }
+
+  .card {
+    padding: 2rem;
+  }
+
+  .title {
+    font-size: 2rem;
+  }
+
+  .connectButton {
+    width: 100%;
+    justify-content: center;
+  }
+}
