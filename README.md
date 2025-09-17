@@ -205,4 +205,8 @@ Remember to update CORS and redirect URIs accordingly.
 
 ## License
 
-This project is for an interview and should not be copied.# Clean commit history
+This project is for an interview and should not be copied.
+
+## Screenshot of App
+<img width="983" height="549" alt="image" src="https://github.com/user-attachments/assets/f199c949-a891-4889-bdc0-a16c3148f179" />
+
