@@ -5,18 +5,17 @@
  */
 
 import { useEffect, useState } from 'react';
-import { fetchAthleteProfile, formatDistance, formatElevation, formatDuration } from '../services/api';
-import type { ProfileResponse } from '../types';
-import LoadingOverlay from './LoadingOverlay';
+import { fetchAthleteProfile, formatDistance, formatElevation, formatDuration } from '../services/api.js';
+import LoadingOverlay from './LoadingOverlay.jsx';
 import { GiPathDistance } from 'react-icons/gi';
 import { MdNumbers } from 'react-icons/md';
 import { FaMountain } from 'react-icons/fa6';
 import styles from './Dashboard.module.css';
 
 const Dashboard = () => {
-  const [profileData, setProfileData] = useState<ProfileResponse | null>(null);
+  const [profileData, setProfileData] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState(null);
   const [selectedPeriod, setSelectedPeriod] = useState('30');
 
   useEffect(() => {
@@ -47,7 +46,7 @@ const Dashboard = () => {
     loadProfile();
   }, [selectedPeriod]);
 
-  const handlePeriodChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+  const handlePeriodChange = (event) => {
     setSelectedPeriod(event.target.value);
   };
 

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { initiateStravaAuth } from '../services/api';
+import { initiateStravaAuth } from '../services/api.js';
 import styles from './LoginPage.module.css';
 
 const LoginPage = () => {

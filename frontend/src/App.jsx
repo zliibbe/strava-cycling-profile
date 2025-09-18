@@ -3,8 +3,8 @@
  */
 
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import LoginPage from './components/LoginPage';
-import Dashboard from './components/Dashboard';
+import LoginPage from './components/LoginPage.jsx';
+import Dashboard from './components/Dashboard.jsx';
 import './App.css';
 
 function App() {
