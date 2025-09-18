@@ -4,9 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "nodemon --exec \"node --loader ts-node/esm\" src/app.ts",
-    "build": "tsc",
-    "start": "node dist/app.js",
+    "dev": "nodemon src/app.js",
+    "start": "node src/app.js",
     "test": "echo \"Error: no testing framework specified\" && exit 1"
   },
   "keywords": [],
