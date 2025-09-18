@@ -4,12 +4,7 @@
 
 import styles from './LoadingOverlay.module.css';
 
-interface LoadingOverlayProps {
-  readonly isVisible: boolean;
-  readonly message?: string;
-}
-
-const LoadingOverlay = ({ isVisible, message = "Loading..." }: LoadingOverlayProps) => {
+const LoadingOverlay = ({ isVisible, message = "Loading..." }) => {
   if (!isVisible) return null;
 
   return (

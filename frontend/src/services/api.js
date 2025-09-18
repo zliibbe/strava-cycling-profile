@@ -2,15 +2,13 @@
  * API service for backend communication
  */
 
-import type { ProfileResponse } from '../types';
-
 const API_BASE_URL = 'http://localhost:3001';
 
 /**
  * Initiate Strava OAuth flow in popup window
  * Single responsibility: open OAuth in popup and handle callback
  */
-export const initiateStravaAuth = (): Promise<{accessToken: string, athleteId: string}> => {
+export const initiateStravaAuth = () => {
   return new Promise((resolve, reject) => {
     console.log('🔄 Initiating Strava OAuth flow in popup');
 
@@ -34,7 +32,7 @@ export const initiateStravaAuth = (): Promise<{accessToken: string, athleteId: s
     }, 1000);
 
     // Listen for message from popup
-    const messageHandler = (event: MessageEvent) => {
+    const messageHandler = (event) => {
       // Only accept messages that have the expected OAuth data structure
       if (!event.data || (typeof event.data !== 'object')) return;
       if (!event.data.accessToken && !event.data.error) return;
@@ -63,7 +61,7 @@ export const initiateStravaAuth = (): Promise<{accessToken: string, athleteId: s
  * Fetch athlete profile and stats from backend
  * Single responsibility: get profile data with access token
  */
-export const fetchAthleteProfile = async (accessToken: string, period?: string): Promise<ProfileResponse> => {
+export const fetchAthleteProfile = async (accessToken, period) => {
   console.log('🔄 Fetching athlete profile from backend');
 
   const url = new URL(`${API_BASE_URL}/api/profile`);
@@ -83,7 +81,7 @@ export const fetchAthleteProfile = async (accessToken: string, period?: string):
     throw new Error(`Failed to fetch profile: ${response.statusText}`);
   }
 
-  const profileData = await response.json() as ProfileResponse;
+  const profileData = await response.json();
   console.log('✅ Profile data received:', profileData.athlete.firstname);
 
   return profileData;
@@ -93,7 +91,7 @@ export const fetchAthleteProfile = async (accessToken: string, period?: string):
  * Parse OAuth callback parameters from URL
  * Single responsibility: extract OAuth data from URL
  */
-export const parseOAuthParams = (searchParams: URLSearchParams) => {
+export const parseOAuthParams = (searchParams) => {
   console.log('🔄 Parsing OAuth callback parameters');
 
   const accessToken = searchParams.get('access_token');
@@ -117,7 +115,7 @@ export const parseOAuthParams = (searchParams: URLSearchParams) => {
 /**
  * Format distance for display (convert meters to miles for Americans ;))
  */
-export const formatDistance = (meters: number): string => {
+export const formatDistance = (meters) => {
   const miles = meters * 0.000621371; // Convert meters to miles
 
   if (miles >= 1000) {
@@ -130,7 +128,7 @@ export const formatDistance = (meters: number): string => {
 /**
  * Format elevation for display (convert meters to feet for Americans ;))
  */
-export const formatElevation = (meters: number): string => {
+export const formatElevation = (meters) => {
   const feet = meters * 3.28084; // Convert meters to feet
   return `${Math.round(feet).toLocaleString()} ft`;
 };
@@ -138,7 +136,7 @@ export const formatElevation = (meters: number): string => {
 /**
  * Format time duration for display (convert meters to readable format for Americans ;))
  */
-export const formatDuration = (seconds: number): string => {
+export const formatDuration = (seconds) => {
   const hours = Math.floor(seconds / 3600);
   const minutes = Math.floor((seconds % 3600) / 60);
 
