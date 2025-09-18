@@ -7,14 +7,11 @@ import express from 'express';
 import { exchangeCodeForToken, fetchAthlete, fetchActivities } from '../services/stravaApi.js';
 import { getLastWeekStats, getLast30DaysStats, getLast60DaysStats } from '../services/statsAggregator.js';
 
-type Request = express.Request;
-type Response = express.Response;
-
 /**
  * Generate Strava OAuth authorization URL
  * Lean handler: just build URL and redirect
  */
-export const initiateAuth = (req: Request, res: Response): void => {
+export const initiateAuth = (req, res) => {
   console.log('🔄 Initiating Strava OAuth flow');
 
   const clientId = process.env.STRAVA_CLIENT_ID;
@@ -41,7 +38,7 @@ export const initiateAuth = (req: Request, res: Response): void => {
  * Handle OAuth callback from Strava
  * Lean handler: delegate token exchange to service layer and return popup callback page
  */
-export const handleCallback = async (req: Request, res: Response): Promise<void> => {
+export const handleCallback = async (req, res) => {
   console.log('🔄 Handling OAuth callback');
 
   const { code, error } = req.query;
@@ -72,10 +69,10 @@ export const handleCallback = async (req: Request, res: Response): Promise<void>
   }
 
   try {
-    const clientId = process.env.STRAVA_CLIENT_ID!;
-    const clientSecret = process.env.STRAVA_CLIENT_SECRET!;
+    const clientId = process.env.STRAVA_CLIENT_ID;
+    const clientSecret = process.env.STRAVA_CLIENT_SECRET;
 
-    const tokenData = await exchangeCodeForToken(code as string, clientId, clientSecret);
+    const tokenData = await exchangeCodeForToken(code, clientId, clientSecret);
 
     console.log('✅ OAuth successful, sending tokens to parent window');
 
@@ -128,7 +125,7 @@ export const handleCallback = async (req: Request, res: Response): Promise<void>
  * Get athlete profile and stats
  * Lean handler: delegate to service functions
  */
-export const getAthleteProfile = async (req: Request, res: Response): Promise<void> => {
+export const getAthleteProfile = async (req, res) => {
   console.log('🔄 Getting athlete profile');
 
   const authHeader = req.headers.authorization;
@@ -140,7 +137,7 @@ export const getAthleteProfile = async (req: Request, res: Response): Promise<vo
   }
 
   // Get period from query parameter, default to 30 days
-  const period = req.query.period as string || '30';
+  const period = req.query.period || '30';
   console.log(`📊 Requested period: ${period} days`);
 
   try {

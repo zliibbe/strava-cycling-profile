@@ -2,12 +2,10 @@
  * Statistics aggregation service functions
  */
 
-import type { Activity, AthleteStats } from '../types/index.js';
-
 /**
  * Filter activities to cycling activities only
  */
-export const filterCyclingActivities = (activities: Activity[]): Activity[] => {
+export const filterCyclingActivities = (activities) => {
   console.log(`Filtering ${activities.length} activities for cycling activities`);
 
   const cyclingActivities = activities.filter(activity =>
@@ -25,10 +23,10 @@ export const filterCyclingActivities = (activities: Activity[]): Activity[] => {
  * Single responsibility: just date filtering
  */
 export const filterActivitiesByDateRange = (
-  activities: Activity[],
-  startDate: Date,
-  endDate: Date
-): Activity[] => {
+  activities,
+  startDate,
+  endDate
+) => {
   console.log(`Filtering activities from ${startDate.toISOString()} to ${endDate.toISOString()}`);
 
   const filtered = activities.filter(activity => {
@@ -44,7 +42,7 @@ export const filterActivitiesByDateRange = (
  * Aggregate cycling statistics from activities
  * Single responsibility: just calculate totals
  */
-export const aggregateCyclingStats = (activities: Activity[]): AthleteStats => {
+export const aggregateCyclingStats = (activities) => {
   console.log(`Aggregating stats from ${activities.length} activities`);
 
   const stats = activities.reduce((totals, activity) => ({
@@ -57,7 +55,7 @@ export const aggregateCyclingStats = (activities: Activity[]): AthleteStats => {
     totalRides: 0,
     totalElevationGain: 0,
     totalMovingTime: 0
-  } as AthleteStats);
+  });
 
   console.log('Stats aggregated:', {
     rides: stats.totalRides,
@@ -71,7 +69,7 @@ export const aggregateCyclingStats = (activities: Activity[]): AthleteStats => {
 /**
  * Get stats for a specific time period
  */
-export const getStatsForPeriod = (activities: Activity[], days: number): AthleteStats => {
+export const getStatsForPeriod = (activities, days) => {
   console.log(`Getting last ${days} days cycling stats`);
 
   const startDate = new Date();
@@ -88,20 +86,20 @@ export const getStatsForPeriod = (activities: Activity[], days: number): Athlete
 /**
  * Get stats for last 7 days
  */
-export const getLastWeekStats = (activities: Activity[]): AthleteStats => {
+export const getLastWeekStats = (activities) => {
   return getStatsForPeriod(activities, 7);
 };
 
 /**
  * Get stats for last 30 days
  */
-export const getLast30DaysStats = (activities: Activity[]): AthleteStats => {
+export const getLast30DaysStats = (activities) => {
   return getStatsForPeriod(activities, 30);
 };
 
 /**
  * Get stats for last 60 days
  */
-export const getLast60DaysStats = (activities: Activity[]): AthleteStats => {
+export const getLast60DaysStats = (activities) => {
   return getStatsForPeriod(activities, 60);
 };
