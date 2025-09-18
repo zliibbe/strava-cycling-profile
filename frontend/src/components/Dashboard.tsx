@@ -5,8 +5,7 @@
  */
 
 import { useEffect, useState } from 'react';
-import { useSearchParams } from 'react-router-dom';
-import { fetchAthleteProfile, parseOAuthParams, formatDistance, formatElevation, formatDuration } from '../services/api';
+import { fetchAthleteProfile, formatDistance, formatElevation, formatDuration } from '../services/api';
 import type { ProfileResponse } from '../types';
 import LoadingOverlay from './LoadingOverlay';
 import { GiPathDistance } from 'react-icons/gi';
@@ -15,7 +14,6 @@ import { FaMountain } from 'react-icons/fa6';
 import styles from './Dashboard.module.css';
 
 const Dashboard = () => {
-  const [searchParams] = useSearchParams();
   const [profileData, setProfileData] = useState<ProfileResponse | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -27,8 +25,13 @@ const Dashboard = () => {
         setLoading(true);
         setError(null);
 
-        // Parse OAuth parameters from URL
-        const { accessToken } = parseOAuthParams(searchParams);
+        // Get access token from localStorage (stored by popup OAuth flow)
+        const accessToken = localStorage.getItem('strava_access_token');
+        const athleteId = localStorage.getItem('strava_athlete_id');
+
+        if (!accessToken || !athleteId) {
+          throw new Error('Missing access token or athlete ID');
+        }
 
         // Fetch profile data from backend with selected period
         const data = await fetchAthleteProfile(accessToken, selectedPeriod);
@@ -42,7 +45,7 @@ const Dashboard = () => {
     };
 
     loadProfile();
-  }, [searchParams, selectedPeriod]);
+  }, [selectedPeriod]);
 
   const handlePeriodChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     setSelectedPeriod(event.target.value);
@@ -71,7 +74,7 @@ const Dashboard = () => {
     );
   }
 
-  const { athlete, stats, period } = profileData || {};
+  const { athlete, stats } = profileData || {};
 
   return (
     <>
