@@ -208,5 +208,12 @@ Remember to update CORS and redirect URIs accordingly.
 This project is for an interview and should not be copied.
 
 ## Screenshot of App
+### v1
 <img width="983" height="549" alt="image" src="https://github.com/user-attachments/assets/f199c949-a891-4889-bdc0-a16c3148f179" />
+
+### v2
+Work done after the time limit was complete
+See the following branches: 1) ui-improvements 2) oauth-popup-flow 3) javascript-only
+<img width="1390" height="1050" alt="image" src="https://github.com/user-attachments/assets/82151f93-2677-447d-93a7-d5a758d48a34" />
+
 
