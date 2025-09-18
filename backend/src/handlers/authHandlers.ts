@@ -39,7 +39,7 @@ export const initiateAuth = (req: Request, res: Response): void => {
 
 /**
  * Handle OAuth callback from Strava
- * Lean handler: delegate token exchange to service layer
+ * Lean handler: delegate token exchange to service layer and return popup callback page
  */
 export const handleCallback = async (req: Request, res: Response): Promise<void> => {
   console.log('🔄 Handling OAuth callback');
@@ -48,7 +48,26 @@ export const handleCallback = async (req: Request, res: Response): Promise<void>
 
   if (error || !code) {
     console.error('❌ OAuth callback error:', error);
-    res.status(400).json({ error: 'Authorization failed' });
+    const errorMessage = error || 'Missing authorization code';
+    const errorHtml = `
+      <!DOCTYPE html>
+      <html>
+      <head>
+          <title>OAuth Error</title>
+      </head>
+      <body>
+          <script>
+              if (window.opener) {
+                  window.opener.postMessage({
+                      error: 'Authorization failed: ${errorMessage}'
+                  }, '*');
+              }
+              window.close();
+          </script>
+      </body>
+      </html>
+    `;
+    res.send(errorHtml);
     return;
   }
 
@@ -58,17 +77,50 @@ export const handleCallback = async (req: Request, res: Response): Promise<void>
 
     const tokenData = await exchangeCodeForToken(code as string, clientId, clientSecret);
 
-    // In a real app, you'd store the token securely
-    // For this demo, we'll redirect to frontend with token info
-    const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:5173';
-    const redirectUrl = `${frontendUrl}/dashboard?access_token=${tokenData.access_token}&athlete_id=${tokenData.athlete.id}`;
+    console.log('✅ OAuth successful, sending tokens to parent window');
 
-    console.log('✅ OAuth successful, redirecting to frontend');
-    res.redirect(redirectUrl);
+    const successHtml = `
+      <!DOCTYPE html>
+      <html>
+      <head>
+          <title>OAuth Success</title>
+      </head>
+      <body>
+          <script>
+              if (window.opener) {
+                  window.opener.postMessage({
+                      accessToken: '${tokenData.access_token}',
+                      athleteId: '${tokenData.athlete.id}'
+                  }, '*');
+              }
+              window.close();
+          </script>
+      </body>
+      </html>
+    `;
+    res.send(successHtml);
 
   } catch (error) {
     console.error('❌ Token exchange failed:', error);
-    res.status(500).json({ error: 'Authentication failed' });
+    const errorHtml = `
+      <!DOCTYPE html>
+      <html>
+      <head>
+          <title>OAuth Error</title>
+      </head>
+      <body>
+          <script>
+              if (window.opener) {
+                  window.opener.postMessage({
+                      error: 'Authentication failed'
+                  }, '*');
+              }
+              window.close();
+          </script>
+      </body>
+      </html>
+    `;
+    res.send(errorHtml);
   }
 };
 
