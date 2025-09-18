@@ -8,6 +8,7 @@ export interface Athlete {
   readonly resource_state: number;
   readonly firstname: string;
   readonly lastname: string;
+  readonly bio: string | null;
   readonly city: string | null;
   readonly state: string | null;
   readonly country: string | null;
