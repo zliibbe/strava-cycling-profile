@@ -7,12 +7,56 @@ import type { ProfileResponse } from '../types';
 const API_BASE_URL = 'http://localhost:3001';
 
 /**
- * Initiate Strava OAuth flow
- * Single responsibility: redirect to backend OAuth endpoint
+ * Initiate Strava OAuth flow in popup window
+ * Single responsibility: open OAuth in popup and handle callback
  */
-export const initiateStravaAuth = (): void => {
-  console.log('🔄 Initiating Strava OAuth flow');
-  window.location.href = `${API_BASE_URL}/auth/strava`;
+export const initiateStravaAuth = (): Promise<{accessToken: string, athleteId: string}> => {
+  return new Promise((resolve, reject) => {
+    console.log('🔄 Initiating Strava OAuth flow in popup');
+
+    const popup = window.open(
+      `${API_BASE_URL}/auth/strava`,
+      'strava-oauth',
+      'width=600,height=700,scrollbars=yes,resizable=yes'
+    );
+
+    if (!popup) {
+      reject(new Error('Failed to open popup window. Please allow popups for this site.'));
+      return;
+    }
+
+    // Poll for popup to close or receive message
+    const checkClosed = setInterval(() => {
+      if (popup.closed) {
+        clearInterval(checkClosed);
+        reject(new Error('OAuth popup was closed by user'));
+      }
+    }, 1000);
+
+    // Listen for message from popup
+    const messageHandler = (event: MessageEvent) => {
+      // Only accept messages that have the expected OAuth data structure
+      if (!event.data || (typeof event.data !== 'object')) return;
+      if (!event.data.accessToken && !event.data.error) return;
+
+      clearInterval(checkClosed);
+      popup.close();
+      window.removeEventListener('message', messageHandler);
+
+      if (event.data.error) {
+        reject(new Error(event.data.error));
+      } else if (event.data.accessToken && event.data.athleteId) {
+        resolve({
+          accessToken: event.data.accessToken,
+          athleteId: event.data.athleteId
+        });
+      } else {
+        reject(new Error('Invalid OAuth response'));
+      }
+    };
+
+    window.addEventListener('message', messageHandler);
+  });
 };
 
 /**
