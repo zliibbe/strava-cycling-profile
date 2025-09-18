@@ -41,7 +41,7 @@ app.use((req, res) => {
 });
 
 // Error handler
-app.use((error: Error, req: express.Request, res: express.Response, next: express.NextFunction) => {
+app.use((error, req, res, next) => {
   console.error('❌ Unhandled error: 1', error);
   res.status(500).json({ error: 'Internal server error' });
 });

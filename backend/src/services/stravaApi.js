@@ -2,8 +2,6 @@
  * Strava API service functions
  */
 
-import type { AuthToken, TokenExchangeRequest, Athlete, Activity } from '../types/index.js';
-
 const STRAVA_BASE_URL = 'https://www.strava.com/api/v3';
 const STRAVA_AUTH_URL = 'https://www.strava.com/oauth';
 
@@ -11,13 +9,13 @@ const STRAVA_AUTH_URL = 'https://www.strava.com/oauth';
  * Exchange authorization code for access token
  */
 const exchangeCodeForToken = async (
-  authCode: string,
-  clientId: string,
-  clientSecret: string
-): Promise<AuthToken> => {
+  authCode,
+  clientId,
+  clientSecret
+) => {
   console.log('🔄 Exchanging authorization code for access token');
 
-  const tokenRequest: TokenExchangeRequest = {
+  const tokenRequest = {
     client_id: clientId,
     client_secret: clientSecret,
     code: authCode,
@@ -37,7 +35,7 @@ const exchangeCodeForToken = async (
     throw new Error(`Token exchange failed: ${response.statusText}`);
   }
 
-  const tokenData = await response.json() as AuthToken;
+  const tokenData = await response.json();
   console.log('✅ Token exchange successful for athlete:', tokenData.athlete.id);
 
   return tokenData;
@@ -46,7 +44,7 @@ const exchangeCodeForToken = async (
 /**
  * Fetch authenticated athlete profile
  */
-const fetchAthlete = async (accessToken: string): Promise<Athlete> => {
+const fetchAthlete = async (accessToken) => {
   console.log('🔄 Fetching athlete profile');
 
   const response = await fetch(`${STRAVA_BASE_URL}/athlete`, {
@@ -60,7 +58,7 @@ const fetchAthlete = async (accessToken: string): Promise<Athlete> => {
     throw new Error(`Failed to fetch athlete: ${response.statusText}`);
   }
 
-  const athlete = await response.json() as Athlete;
+  const athlete = await response.json();
   console.log('✅ Athlete profile fetched:', athlete.firstname, athlete.lastname);
 
   return athlete;
@@ -71,11 +69,11 @@ const fetchAthlete = async (accessToken: string): Promise<Athlete> => {
  * Single responsibility: just fetch activities
  */
 const fetchActivities = async (
-  accessToken: string,
-  after?: Date,
-  before?: Date,
-  perPage: number = 30
-): Promise<Activity[]> => {
+  accessToken,
+  after,
+  before,
+  perPage = 30
+) => {
   console.log('🔄 Fetching athlete activities');
 
   const url = new URL(`${STRAVA_BASE_URL}/athlete/activities`);
@@ -100,7 +98,7 @@ const fetchActivities = async (
     throw new Error(`Failed to fetch activities: ${response.statusText}`);
   }
 
-  const activities = await response.json() as Activity[];
+  const activities = await response.json();
   console.log(`✅ Fetched ${activities.length} activities`);
 
   return activities;
