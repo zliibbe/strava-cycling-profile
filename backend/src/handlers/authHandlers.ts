@@ -132,7 +132,13 @@ export const getAthleteProfile = async (req: Request, res: Response): Promise<vo
   console.log('🔄 Getting athlete profile');
 
   const authHeader = req.headers.authorization;
-  const accessToken = authHeader?.replace('Bearer ', '');
+
+  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    res.status(401).json({ error: 'Invalid authorization header format' });
+    return;
+  }
+
+  const accessToken = authHeader.replace('Bearer ', '');
 
   if (!accessToken) {
     res.status(401).json({ error: 'Access token required' });
