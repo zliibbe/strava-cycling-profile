@@ -73,7 +73,7 @@ describe('API Endpoints', () => {
         .expect(401);
 
       expect(response.body).toEqual({
-        error: 'Access token required'
+        error: 'Invalid authorization header format'
       });
     });
 
